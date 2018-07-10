@@ -1,0 +1,4 @@
+1. Please do not define the fields for associations while defining entities as they are picked from relations property
+2. If you see below message in logs please re-validate your entities
+	("Entities should not contain Object type as fields unless this is intentional");
+	("Entities should not contain Array type as fields unless this is intentional");

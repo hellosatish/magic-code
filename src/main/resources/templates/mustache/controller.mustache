@@ -1,0 +1,25 @@
+package {{packageName}}.web.rest;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+{{#importStatements}}
+import {{.}};
+{{/importStatements}}
+
+@RestController
+public class {{className}}Controller {
+	{{#urlMappings}}
+	{{#methodAnnotations}}
+	 {{.}}
+	{{/methodAnnotations}}
+	 {{urlAnnotations}}(value = "{{getURL}}")
+	 public ResponseEntity<{{{responseType}}}> {{operationName}}({{#headerParams}}{{^-first}}, {{/-first}} @RequestHeader("{{name}}") {{type}} {{name}} {{/headerParams}}{{#hadHeaderParam}},{{/hadHeaderParam}}{{#pathParams}}{{^-first}}, {{/-first}} @PathVariable("{{name}}") {{type}} {{name}} {{/pathParams}}{{#bodyParam}}{{#hadPathParam}},{{/hadPathParam}} @RequestBody {{{type}}} {{{name}}} {{/bodyParam}}){
+	 //Perform your magic of buisness logic here
+	 return new ResponseEntity<{{{responseType}}}>(HttpStatus.OK);
+	 }
+	 
+	 
+	{{/urlMappings}}
+}

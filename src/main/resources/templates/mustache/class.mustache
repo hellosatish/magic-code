@@ -1,0 +1,23 @@
+package {{packageName}};
+
+{{#mainClass}}
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+{{/mainClass}}
+{{#importStatements}}
+import {{.}};
+{{/importStatements}}
+
+{{#mainClass}}
+@SpringBootApplication
+{{/mainClass}}
+{{#annotations}}
+{{.}}
+{{/annotations}}
+public class {{className}}{{#mainClass}}Application{{/mainClass}} {
+	{{#mainClass}}
+	public static void main(String[] args) {
+		SpringApplication.run({{className}}Application.class, args);
+	}
+	{{/mainClass}}
+}

@@ -1,0 +1,67 @@
+package {{packageName}};
+
+import java.io.Serializable;
+{{#importStatements}}
+import {{.}};
+{{/importStatements}}
+{{#entityClass}}
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Column;
+{{/entityClass}}
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+{{#entityClass}}
+@Entity
+@Table(name="{{className}}")
+{{/entityClass}}
+public class {{className}} implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+  {{#fields}}
+  {{#entityClass}}
+  	{{#primaryColumn}}
+  	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+  	{{/primaryColumn}}
+  	@Column
+  {{/entityClass}}
+  	private {{#array}}List<{{/array}}{{dataType}}{{#array}}>{{/array}}  {{name}};
+  {{/fields}}
+ 
+ {{#entityClass}}
+ {{#relations}}
+ {{#relationAnnotation}}
+ 	{{{.}}}
+ {{/relationAnnotation}}
+  {{#parentSide}}
+   {{#childMany}}
+ 	private  List<{{child}}>  {{relationShipName}};
+ 	{{/childMany}}
+ 	{{^childMany}}
+ 	private  {{child}}  {{relationShipName}};
+ 	{{/childMany}}
+  {{/parentSide}}
+  {{^parentSide}}
+  	{{#parentMany}}
+ 	private  List<{{parent}}> {{relationShipName}};
+ 	{{/parentMany}}
+ 	{{^parentMany}}
+ 	private  {{parent}}  {{relationShipName}};
+ 	{{/parentMany}}
+  {{/parentSide}}  
+ {{/relations}} 
+  {{/entityClass}}
+}
+
+

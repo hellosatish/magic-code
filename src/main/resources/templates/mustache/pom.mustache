@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>{{groupId}}</groupId>
+	<artifactId>{{artifactId}}</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>{{projectName}}</name>
+	<description>Project {{projectName}}</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.0.M6</version>
+		<relativePath/>
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		{{#swaggerEnabled}}
+		<jackson.version>2.9.0.pr3</jackson.version>
+		<springfox-version>2.5.0</springfox-version>
+		{{/swaggerEnabled}}
+		{{#cloudconfigEnabled}}
+		<spring-cloud.version>Dalston.RELEASE</spring-cloud.version>
+		{{/cloudconfigEnabled}}
+		{{#dockerEnabled}}
+		<docker.image.prefix>magiccode</docker.image.prefix>
+		{{/dockerEnabled}}
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+		{{#cloudDependencyEnabled}} 
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		{{/cloudDependencyEnabled}} 
+ 		</dependencies>
+	</dependencyManagement>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		
+		{{#swaggerEnabled}}
+		<!--SpringFox swagger dependencies -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
+		<!--SpringFox swagger dependencies -->
+		{{/swaggerEnabled}}
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		{{#securityEnabled}}
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		{{/securityEnabled}}
+		{{#actuatorEnabled}}
+		 <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        {{#metricsConfig}}
+        {{#jmx}}
+        <dependency>
+		  <groupId>io.micrometer</groupId>
+		  <artifactId>micrometer-registry-jmx</artifactId>
+		</dependency>
+		{{/jmx}}
+		{{#graphite}}
+		<dependency>
+		  <groupId>io.micrometer</groupId>
+		  <artifactId>micrometer-registry-graphite</artifactId>
+		</dependency>
+		{{/graphite}}
+        {{#prometheus}}
+        <dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
+        {{/prometheus}}
+        {{#atlas}}
+        <dependency>
+		  <groupId>io.micrometer</groupId>
+		  <artifactId>micrometer-registry-atlas</artifactId>
+		</dependency>
+        {{/atlas}}
+        {{#datadog}}
+        <dependency>
+		  <groupId>io.micrometer</groupId>
+		  <artifactId>micrometer-registry-datadog</artifactId>
+		</dependency>
+        {{/datadog}}
+        {{/metricsConfig}}
+        {{/actuatorEnabled}}
+		{{#cloudconfigEnabled}}
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+		{{/cloudconfigEnabled}}
+		{{#serviceRegistrationEnabled}}
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+		</dependency>
+		{{/serviceRegistrationEnabled}}
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>{{#dockerEnabled}}
+			<plugin>
+	        	<groupId>com.spotify</groupId>
+	            <artifactId>dockerfile-maven-plugin</artifactId>
+	            <version>1.3.4</version>
+	            <configuration>
+	                <repository>${docker.image.prefix}/${project.artifactId}</repository>
+	            </configuration>
+        	</plugin>{{/dockerEnabled}}
+		</plugins>
+	</build>
+	
+	<profiles>
+    <profile>
+        <id>dev</id>
+        <activation>
+        	<activeByDefault>true</activeByDefault>
+        </activation>
+        <dependencies>
+            {{#isDevH2}}
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+			</dependency>
+			{{/isDevH2}}
+			{{#isDevMySQL}}
+			<dependency>
+	            <groupId>mysql</groupId>
+	            <artifactId>mysql-connector-java</artifactId>
+	        </dependency>
+	       	{{/isDevMySQL}}
+        </dependencies>
+    </profile>
+    <profile>
+        <id>prod</id>
+        <dependencies>
+            {{#isProdH2}}
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+			</dependency>
+			{{/isProdH2}}
+			{{#isProdMySQL}}
+			<dependency>
+	            <groupId>mysql</groupId>
+	            <artifactId>mysql-connector-java</artifactId>
+	        </dependency>
+	       	{{/isProdMySQL}}
+        </dependencies>
+    </profile>
+	</profiles>
+	
+	<repositories>
+		<repository>
+			<id>spring-snapshots</id>
+			<name>Spring Snapshots</name>
+			<url>https://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-snapshots</id>
+			<name>Spring Snapshots</name>
+			<url>https://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+</project>
