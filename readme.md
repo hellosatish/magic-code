@@ -1,9 +1,9 @@
 # ***Magic-Code***
- ![hello](./img/hello.png) 
+ ![hello](https://github.com/hellosatish/magic-code/blob/master/img/hello.png) 
 
 Need to create microservices with right set of tools and frameworks? Then **Magic-Code** is the framework to ease you out.
 ***Magic-Code*** provides a platform to generate scalable microservices using opinionated frameworks and tools, Latest features of different frameworks are stitched together to give you a jump start, So that you are focused on your business logic instead of figuring out which tools to use and how to enable them in your project.
-![Magic-Code architecture](./img/architecture.png)
+![Magic-Code architecture](https://github.com/hellosatish/magic-code/blob/master/img/architecture.png)
 
 
 ## ** ***Magic-Code*** generated code features** 
